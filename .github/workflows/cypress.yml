@@ -1,0 +1,55 @@
+name: Testes Automatizados - PGATS
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  cypress-tests:
+    name: Executar Testes Cypress
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Baixar o código do repositório
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      # 2. Configurar o Node.js
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # 3. Instalar as dependências
+      - name: Instalar dependências
+        run: npm ci
+
+      # 4. Executar os testes automatizados
+      - name: Executar testes Cypress
+        run: npx cypress run --browser chrome
+
+      # 5. Publicar relatório Mochawesome
+      - name: Publicar relatório Mochawesome
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-mochawesome
+          path: cypress/reports/html/
+          if-no-files-found: warn
+
+      # 6. Publicar screenshots em caso de falha
+      - name: Publicar screenshots de falhas
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-cypress
+          path: cypress/screenshots/
+          if-no-files-found: ignore

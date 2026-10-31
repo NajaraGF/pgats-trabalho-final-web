@@ -1,0 +1,18 @@
+# Dependências
+node_modules/
+
+# Relatórios e evidências gerados pelo Cypress
+cypress/reports/
+cypress/screenshots/
+cypress/videos/
+
+# Arquivos do sistema
+.DS_Store
+
+# Variáveis de ambiente e credenciais
+.env
+.env.*
+cypress.env.json
+
+# Logs
+npm-debug.log*
